@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: cinematic_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=cinematic
+      - POSTGRES_DB=cinematic
