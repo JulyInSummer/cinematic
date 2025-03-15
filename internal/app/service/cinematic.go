@@ -19,6 +19,10 @@ func NewCinematicService(logger *zap.Logger, movies storage.MoviesI) ServiceI {
 	}
 }
 
+func (c *cinematic) Create(ctx context.Context, movie domain.Movie) error {
+	return c.movies.Create(ctx, movie.ToModel())
+}
+
 func (c *cinematic) GetAll(ctx context.Context) ([]domain.Movie, error) {
 	var movies []domain.Movie
 
@@ -55,19 +59,9 @@ func (c *cinematic) GetByID(ctx context.Context, id int) (*domain.Movie, error) 
 	}, nil
 }
 
-func (c *cinematic) Update(ctx context.Context, movie domain.Movie) (*domain.Movie, error) {
-	result, err := c.movies.Update(ctx, movie.ToModel())
-	if err != nil {
-		return nil, err
-	}
+func (c *cinematic) Update(ctx context.Context, movie domain.Movie) error {
+	return c.movies.Update(ctx, movie.ToModel())
 
-	return &domain.Movie{
-		ID:       result.ID,
-		Title:    result.Title,
-		Director: result.Director,
-		Year:     result.Year,
-		Plot:     result.Plot,
-	}, nil
 }
 
 func (c *cinematic) Delete(ctx context.Context, id int) error {
