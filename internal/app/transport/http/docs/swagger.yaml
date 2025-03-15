@@ -1,0 +1,268 @@
+definitions:
+  request.CreateUser:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  request.LoginCredentials:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  request.UpdateMovie:
+    properties:
+      director:
+        type: string
+      id:
+        type: integer
+      plot:
+        type: string
+      title:
+        type: string
+      year:
+        type: string
+    type: object
+  response.Movie:
+    properties:
+      director:
+        type: string
+      id:
+        type: integer
+      plot:
+        type: string
+      title:
+        type: string
+      year:
+        type: string
+    type: object
+  rest.APIError:
+    properties:
+      message: {}
+      status_code:
+        type: integer
+    type: object
+  rest.APIResponse:
+    additionalProperties: true
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Get Bearer Token
+      parameters:
+      - description: entity
+        in: body
+        name: entity
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginCredentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Bearer Token
+      tags:
+      - auth
+  /v1/movies:
+    get:
+      consumes:
+      - application/json
+      description: Create All Movies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.Movie'
+            type: array
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create All Movies
+      tags:
+      - movies
+    put:
+      consumes:
+      - application/json
+      description: Update Movie
+      parameters:
+      - description: entity
+        in: body
+        name: entity
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateMovie'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Movie
+      tags:
+      - movies
+  /v1/movies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Movie
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Movie
+      tags:
+      - movies
+    get:
+      consumes:
+      - application/json
+      description: Get Movie By ID
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Movie'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Movie By ID
+      tags:
+      - movies
+  /v1/movies/create:
+    post:
+      consumes:
+      - application/json
+      description: Create A Single Movie
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create A Single Movie
+      tags:
+      - movies
+  /v1/register:
+    post:
+      consumes:
+      - application/json
+      description: Create A New User
+      parameters:
+      - description: entity
+        in: body
+        name: entity
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/rest.APIError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.APIError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create A New User
+      tags:
+      - auth
+swagger: "2.0"
