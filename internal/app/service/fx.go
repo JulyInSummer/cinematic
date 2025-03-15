@@ -8,7 +8,7 @@ import (
 func NewModule() fx.Option {
 	return fx.Module(
 		"service",
-		fx.Provide(NewCinematicService),
+		fx.Provide(NewConfig, NewCinematicService),
 		fx.Decorate(func(logger *zap.Logger) *zap.Logger {
 			return logger.Named("service")
 		}),
