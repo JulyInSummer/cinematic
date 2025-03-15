@@ -24,6 +24,16 @@ func NewHandlerV1(logger *zap.Logger, service service.ServiceI) *HandlerV1 {
 	}
 }
 
+// @Security ApiKeyAuth
+// @Router /v1/movies/create [post]
+// @Summary Create A Single Movie
+// @Description Create A Single Movie
+// @Tags movies
+// @Accept json
+// @Produce json
+// @Success 200 {object} rest.APIResponse
+// @Failure 422 {object} rest.APIError
+// @Failure 500 {object} rest.APIError
 func (h *HandlerV1) CreateMovie(c *gin.Context) error {
 	var req request.CreateMovie
 	method := "HandlerV1.CreateMovie"
@@ -44,6 +54,16 @@ func (h *HandlerV1) CreateMovie(c *gin.Context) error {
 	return nil
 }
 
+// @Security ApiKeyAuth
+// @Router /v1/movies [get]
+// @Summary Create All Movies
+// @Description Create All Movies
+// @Tags movies
+// @Accept json
+// @Produce json
+// @Success 200 {object} []response.Movie
+// @Failure 422 {object} rest.APIError
+// @Failure 500 {object} rest.APIError
 func (h *HandlerV1) GetAll(c *gin.Context) error {
 	method := "HandlerV1.GetAll"
 
@@ -70,6 +90,17 @@ func (h *HandlerV1) GetAll(c *gin.Context) error {
 	return nil
 }
 
+// @Security ApiKeyAuth
+// @Router /v1/movies/{id} [get]
+// @Summary Get Movie By ID
+// @Description Get Movie By ID
+// @Tags movies
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Success 200 {object} response.Movie
+// @Failure 422 {object} rest.APIError
+// @Failure 500 {object} rest.APIError
 func (h *HandlerV1) GetByID(c *gin.Context) error {
 	method := "HandlerV1.GetByID"
 
@@ -102,6 +133,17 @@ func (h *HandlerV1) GetByID(c *gin.Context) error {
 	return nil
 }
 
+// @Security ApiKeyAuth
+// @Router /v1/movies [put]
+// @Summary Update Movie
+// @Description Update Movie
+// @Tags movies
+// @Accept json
+// @Produce json
+// @Param entity body request.UpdateMovie true "entity"
+// @Success 200 {object} rest.APIResponse
+// @Failure 422 {object} rest.APIError
+// @Failure 500 {object} rest.APIError
 func (h *HandlerV1) Update(c *gin.Context) error {
 	method := "HandlerV1.UpdateMovie"
 	var req request.UpdateMovie
@@ -126,6 +168,17 @@ func (h *HandlerV1) Update(c *gin.Context) error {
 	return nil
 }
 
+// @Security ApiKeyAuth
+// @Router /v1/movies/{id} [delete]
+// @Summary Delete Movie
+// @Description Delete Movie
+// @Tags movies
+// @Accept json
+// @Produce json
+// @Param id path string true "id"
+// @Success 200 {object} rest.APIResponse
+// @Failure 422 {object} rest.APIError
+// @Failure 500 {object} rest.APIError
 func (h *HandlerV1) Delete(c *gin.Context) error {
 	method := "HandlerV1.Delete"
 
