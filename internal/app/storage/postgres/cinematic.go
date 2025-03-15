@@ -7,7 +7,6 @@ import (
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/models"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -30,22 +29,7 @@ func getConnString(conf *Config) string {
 	return connStr
 }
 
-func NewStorage(logger *zap.Logger, conf *Config) (storage.MoviesI, error) {
-	db, err := gorm.Open(
-		postgres.New(postgres.Config{
-			DriverName: "postgres",
-			DSN:        getConnString(conf),
-		}),
-	)
-	if err != nil {
-		logger.Error("failed to connect to database", zap.Error(err))
-		return nil, err
-	}
-
-	err = db.AutoMigrate(&models.Movie{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to auto migrate: %w", err)
-	}
+func NewStorage(logger *zap.Logger, db *gorm.DB, conf *Config) (storage.MoviesI, error) {
 
 	return &Storage{
 		Logger: logger,
