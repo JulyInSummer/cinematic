@@ -11,4 +11,11 @@ type ServiceI interface {
 	GetByID(ctx context.Context, id int) (*domain.Movie, error)
 	Update(ctx context.Context, movie domain.Movie) error
 	Delete(ctx context.Context, id int) error
+
+	UserServiceI
+}
+
+type UserServiceI interface {
+	CreateUser(ctx context.Context, user domain.User) error
+	GetUserTokenByEmail(ctx context.Context, user domain.User) (*domain.Token, error)
 }
