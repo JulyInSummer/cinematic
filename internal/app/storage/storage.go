@@ -12,3 +12,8 @@ type MoviesI interface {
 	Update(ctx context.Context, movie models.Movie) error
 	Delete(ctx context.Context, id int) error
 }
+
+type UsersI interface {
+	Create(ctx context.Context, user models.User) error
+	GetByEmail(ctx context.Context, email string) (*models.User, error)
+}
