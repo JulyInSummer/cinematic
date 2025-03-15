@@ -12,6 +12,8 @@ type APIError struct {
 	Message    any `json:"message"`
 }
 
+type APIResponse map[string]interface{}
+
 func (e APIError) Error() string {
 	return fmt.Sprintf("api error: %d", e.StatusCode)
 }
@@ -40,6 +42,10 @@ func Unauthorized() APIError {
 
 func InvalidCredentials() APIError {
 	return NewAPIError(http.StatusUnauthorized, errors.New("email or password is invalid"))
+}
+
+func InvalidToken() APIError {
+	return NewAPIError(http.StatusUnauthorized, errors.New("token is invalid"))
 }
 
 func InvalidJSON() APIError {
