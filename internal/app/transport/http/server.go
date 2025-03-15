@@ -1,9 +1,13 @@
 package http
 
 import (
+	"github.com/JulyInSummer/cinematic/internal/app/pkg/rest"
+	"github.com/JulyInSummer/cinematic/internal/app/pkg/validators"
 	srvc "github.com/JulyInSummer/cinematic/internal/app/service"
 	v1 "github.com/JulyInSummer/cinematic/internal/app/transport/http/handlers/v1"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
 	"net/http"
 	"time"
@@ -23,6 +27,10 @@ func NewHTTPServer(config *Config, logger *zap.Logger, service srvc.ServiceI) *S
 
 	engine := gin.Default()
 
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("date_format", validators.DateFormat)
+	}
+
 	router := engine.Group("/api")
 	router.GET("/ping", ping)
 
@@ -30,7 +38,11 @@ func NewHTTPServer(config *Config, logger *zap.Logger, service srvc.ServiceI) *S
 	routerV1 := router.Group("/v1")
 
 	{
-		routerV1.GET("/ping", apiV1.Ping)
+		routerV1.GET("/movies", rest.Handle(apiV1.GetAll))
+		routerV1.GET("/movies/:id", rest.Handle(apiV1.GetByID))
+		routerV1.DELETE("/movies/:id", rest.Handle(apiV1.Delete))
+		routerV1.PUT("/movies", rest.Handle(apiV1.Update))
+		routerV1.POST("/movies/create", rest.Handle(apiV1.CreateMovie))
 	}
 
 	return &Server{
