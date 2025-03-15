@@ -7,10 +7,10 @@ import (
 
 type Movie struct {
 	ID       uint
-	Title    string
-	Director string
-	Year     string
-	Plot     string
+	Title    *string
+	Director *string
+	Year     *string
+	Plot     *string
 }
 
 func (m *Movie) ToModel() models.Movie {

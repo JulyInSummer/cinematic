@@ -6,8 +6,8 @@ import (
 
 type Movie struct {
 	gorm.Model
-	Title    string
-	Director string
-	Year     string
-	Plot     string
+	Title    *string
+	Director *string
+	Year     *string
+	Plot     *string
 }
