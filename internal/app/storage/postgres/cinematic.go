@@ -31,10 +31,12 @@ func getConnString(conf *Config) string {
 }
 
 func NewStorage(logger *zap.Logger, conf *Config) (storage.MoviesI, error) {
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		DriverName: "postgres",
-		DSN:        getConnString(conf),
-	}))
+	db, err := gorm.Open(
+		postgres.New(postgres.Config{
+			DriverName: "postgres",
+			DSN:        getConnString(conf),
+		}),
+	)
 	if err != nil {
 		logger.Error("failed to connect to database", zap.Error(err))
 		return nil, err
@@ -90,31 +92,57 @@ func (s *Storage) GetByID(ctx context.Context, id int) (*models.Movie, error) {
 	return &movie, nil
 }
 
-func (s *Storage) Update(ctx context.Context, movie models.Movie) (*models.Movie, error) {
+func (s *Storage) Update(ctx context.Context, movie models.Movie) error {
 	method := "Storage.Update"
 
-	result := s.DB.WithContext(ctx).Model(&movie).Updates(models.Movie{
-		Title:    movie.Title,
-		Plot:     movie.Plot,
-		Director: movie.Director,
-		Year:     movie.Year,
-	})
-	if result.Error != nil {
-		s.Logger.Error(method, zap.Error(result.Error))
-		return nil, result.Error
+	resp := s.DB.WithContext(ctx).First(&models.Movie{}, movie.ID)
+	if resp.Error != nil {
+		s.Logger.Error(method, zap.Error(resp.Error))
+		return resp.Error
 	}
 
-	return &movie, nil
+	resp = s.DB.WithContext(ctx).Model(&models.Movie{}).Where("id = ?", movie.ID).Updates(prepareMovieUpdate(movie))
+
+	if resp.Error != nil {
+		s.Logger.Error(method, zap.Error(resp.Error))
+		return resp.Error
+	}
+
+	return nil
 }
 
 func (s *Storage) Delete(ctx context.Context, id int) error {
 	method := "Storage.Delete"
 
-	result := s.DB.WithContext(ctx).Delete(&models.Movie{}, id)
+	result := s.DB.WithContext(ctx).First(&models.Movie{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	result = s.DB.WithContext(ctx).Delete(&models.Movie{}, id)
 	if result.Error != nil {
 		s.Logger.Error(method, zap.Error(result.Error))
 		return result.Error
 	}
 
 	return nil
+}
+
+func prepareMovieUpdate(movie models.Movie) map[string]interface{} {
+	params := make(map[string]interface{})
+
+	if movie.Title != nil {
+		params["title"] = movie.Title
+	}
+	if movie.Year != nil {
+		params["year"] = movie.Year
+	}
+	if movie.Director != nil {
+		params["director"] = movie.Director
+	}
+	if movie.Plot != nil {
+		params["plot"] = movie.Plot
+	}
+
+	return params
 }
