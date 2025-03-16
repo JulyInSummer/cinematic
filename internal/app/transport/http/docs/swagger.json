@@ -1,16 +1,19 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a simple Cinematic service which exposes CRUD APIs on movies",
+        "title": "Cinematic API Specification",
+        "contact": {
+            "name": "JulyInSummer",
+            "email": "azimjanovbogdan@gmail.com"
+        },
+        "version": "1.0"
     },
+    "host": "localhost:8009",
+    "basePath": "/api/v1",
     "paths": {
-        "/v1/login": {
+        "/login": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get Bearer Token",
                 "consumes": [
                     "application/json"
@@ -55,7 +58,7 @@
                 }
             }
         },
-        "/v1/movies": {
+        "/movies": {
             "get": {
                 "security": [
                     {
@@ -72,7 +75,7 @@
                 "tags": [
                     "movies"
                 ],
-                "summary": "Create All Movies",
+                "summary": "Get All Movies",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -147,7 +150,7 @@
                 }
             }
         },
-        "/v1/movies/create": {
+        "/movies/create": {
             "post": {
                 "security": [
                     {
@@ -187,7 +190,7 @@
                 }
             }
         },
-        "/v1/movies/{id}": {
+        "/movies/{id}": {
             "get": {
                 "security": [
                     {
@@ -283,13 +286,8 @@
                 }
             }
         },
-        "/v1/register": {
+        "/register": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Create A New User",
                 "consumes": [
                     "application/json"
@@ -418,6 +416,13 @@
         "rest.APIResponse": {
             "type": "object",
             "additionalProperties": true
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

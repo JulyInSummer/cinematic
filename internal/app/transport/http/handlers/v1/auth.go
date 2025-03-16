@@ -8,8 +8,7 @@ import (
 	"net/http"
 )
 
-// @Security ApiKeyAuth
-// @Router /v1/login [post]
+// @Router /login [post]
 // @Summary Get Bearer Token
 // @Description Get Bearer Token
 // @Tags auth

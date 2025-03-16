@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   request.CreateUser:
     properties:
@@ -54,10 +55,16 @@ definitions:
   rest.APIResponse:
     additionalProperties: true
     type: object
+host: localhost:8009
 info:
-  contact: {}
+  contact:
+    email: azimjanovbogdan@gmail.com
+    name: JulyInSummer
+  description: This is a simple Cinematic service which exposes CRUD APIs on movies
+  title: Cinematic API Specification
+  version: "1.0"
 paths:
-  /v1/login:
+  /login:
     post:
       consumes:
       - application/json
@@ -84,12 +91,10 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/rest.APIError'
-      security:
-      - ApiKeyAuth: []
       summary: Get Bearer Token
       tags:
       - auth
-  /v1/movies:
+  /movies:
     get:
       consumes:
       - application/json
@@ -113,7 +118,7 @@ paths:
             $ref: '#/definitions/rest.APIError'
       security:
       - ApiKeyAuth: []
-      summary: Create All Movies
+      summary: Get All Movies
       tags:
       - movies
     put:
@@ -147,7 +152,7 @@ paths:
       summary: Update Movie
       tags:
       - movies
-  /v1/movies/{id}:
+  /movies/{id}:
     delete:
       consumes:
       - application/json
@@ -208,7 +213,7 @@ paths:
       summary: Get Movie By ID
       tags:
       - movies
-  /v1/movies/create:
+  /movies/create:
     post:
       consumes:
       - application/json
@@ -233,7 +238,7 @@ paths:
       summary: Create A Single Movie
       tags:
       - movies
-  /v1/register:
+  /register:
     post:
       consumes:
       - application/json
@@ -260,9 +265,12 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/rest.APIError'
-      security:
-      - ApiKeyAuth: []
       summary: Create A New User
       tags:
       - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

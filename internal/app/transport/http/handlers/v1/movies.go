@@ -25,7 +25,7 @@ func NewHandlerV1(logger *zap.Logger, service service.ServiceI) *HandlerV1 {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/movies/create [post]
+// @Router /movies/create [post]
 // @Summary Create A Single Movie
 // @Description Create A Single Movie
 // @Tags movies
@@ -55,8 +55,8 @@ func (h *HandlerV1) CreateMovie(c *gin.Context) error {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/movies [get]
-// @Summary Create All Movies
+// @Router /movies [get]
+// @Summary Get All Movies
 // @Description Create All Movies
 // @Tags movies
 // @Accept json
@@ -91,7 +91,7 @@ func (h *HandlerV1) GetAll(c *gin.Context) error {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/movies/{id} [get]
+// @Router /movies/{id} [get]
 // @Summary Get Movie By ID
 // @Description Get Movie By ID
 // @Tags movies
@@ -134,7 +134,7 @@ func (h *HandlerV1) GetByID(c *gin.Context) error {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/movies [put]
+// @Router /movies [put]
 // @Summary Update Movie
 // @Description Update Movie
 // @Tags movies
@@ -169,7 +169,7 @@ func (h *HandlerV1) Update(c *gin.Context) error {
 }
 
 // @Security ApiKeyAuth
-// @Router /v1/movies/{id} [delete]
+// @Router /movies/{id} [delete]
 // @Summary Delete Movie
 // @Description Delete Movie
 // @Tags movies

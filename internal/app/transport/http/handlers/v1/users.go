@@ -8,8 +8,7 @@ import (
 	"net/http"
 )
 
-// @Security ApiKeyAuth
-// @Router /v1/register [post]
+// @Router /register [post]
 // @Summary Create A New User
 // @Description Create A New User
 // @Tags auth

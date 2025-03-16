@@ -9,19 +9,17 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "JulyInSummer",
+            "email": "azimjanovbogdan@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/login": {
+        "/login": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Get Bearer Token",
                 "consumes": [
                     "application/json"
@@ -66,7 +64,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/movies": {
+        "/movies": {
             "get": {
                 "security": [
                     {
@@ -83,7 +81,7 @@ const docTemplate = `{
                 "tags": [
                     "movies"
                 ],
-                "summary": "Create All Movies",
+                "summary": "Get All Movies",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -158,7 +156,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/movies/create": {
+        "/movies/create": {
             "post": {
                 "security": [
                     {
@@ -198,7 +196,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/movies/{id}": {
+        "/movies/{id}": {
             "get": {
                 "security": [
                     {
@@ -294,13 +292,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/register": {
+        "/register": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Create A New User",
                 "consumes": [
                     "application/json"
@@ -430,17 +423,24 @@ const docTemplate = `{
             "type": "object",
             "additionalProperties": true
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "",
+	Version:          "1.0",
+	Host:             "localhost:8009",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "Cinematic API Specification",
+	Description:      "This is a simple Cinematic service which exposes CRUD APIs on movies",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

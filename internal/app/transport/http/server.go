@@ -24,9 +24,6 @@ type Server struct {
 	config  *Config
 }
 
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 func NewHTTPServer(config *Config, serviceConf *srvc.Config, logger *zap.Logger, service srvc.ServiceI) *Server {
 	if config.Mode == "release" {
 		gin.SetMode(gin.ReleaseMode)
