@@ -41,7 +41,7 @@ func NewHTTPServer(config *Config, serviceConf *srvc.Config, logger *zap.Logger,
 	router := engine.Group("/api")
 	router.GET("/ping", ping)
 
-	url := ginSwagger.URL("/swagger/doc.json")
+	url := ginSwagger.URL("swagger/doc.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
 
 	apiV1 := v1.NewHandlerV1(logger, service)
