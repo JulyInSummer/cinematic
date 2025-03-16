@@ -13,6 +13,9 @@ run-local-docker:
 swag-init:
 	swag init -g cmd/app/main.go -o internal/app/transport/http/docs
 
+test:
+	go test -p 1 ./...
+
 run:
 	make swag-init
 	make build
