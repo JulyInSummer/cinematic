@@ -31,6 +31,7 @@ func NewHandlerV1(logger *zap.Logger, service service.ServiceI) *HandlerV1 {
 // @Tags movies
 // @Accept json
 // @Produce json
+// @Param entity body request.CreateUser true "entity"
 // @Success 200 {object} rest.APIResponse
 // @Failure 422 {object} rest.APIError
 // @Failure 500 {object} rest.APIError
