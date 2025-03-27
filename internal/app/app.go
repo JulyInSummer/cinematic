@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"github.com/JulyInSummer/cinematic/internal/app/service"
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres"
 	"github.com/JulyInSummer/cinematic/internal/app/transport/http"
@@ -19,6 +20,9 @@ func NewApp() *fx.App {
 			v1.NewModule(),
 		),
 		fx.Provide(
+			func() context.Context {
+				return context.WithoutCancel(context.Background())
+			},
 			zap.NewProduction,
 			NewConfig,
 		),
