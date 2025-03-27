@@ -21,7 +21,7 @@ func (r CreateMovie) ToDomain() domain.Movie {
 }
 
 type UpdateMovie struct {
-	ID       uint    `json:"id"`
+	ID       uint64  `json:"id"`
 	Title    *string `json:"title"`
 	Year     *string `json:"year"`
 	Plot     *string `json:"plot"`
