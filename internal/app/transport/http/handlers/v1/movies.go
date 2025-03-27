@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"database/sql"
 	"errors"
 	"github.com/JulyInSummer/cinematic/internal/app/pkg/rest"
 	"github.com/JulyInSummer/cinematic/internal/app/service"
@@ -8,7 +9,6 @@ import (
 	"github.com/JulyInSummer/cinematic/internal/app/transport/http/handlers/v1/response"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -116,7 +116,7 @@ func (h *HandlerV1) GetByID(c *gin.Context) error {
 	movie, err := h.service.GetByID(c.Request.Context(), movieID)
 	if err != nil {
 		h.logger.Error(method, zap.Error(err))
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return rest.NotFound()
 		}
 		return err
@@ -158,7 +158,7 @@ func (h *HandlerV1) Update(c *gin.Context) error {
 
 	err := h.service.Update(c.Request.Context(), req.ToDomain())
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return rest.NotFound()
 		}
 		h.logger.Error(method, zap.Error(err))
@@ -190,7 +190,7 @@ func (h *HandlerV1) Delete(c *gin.Context) error {
 	}
 
 	if err = h.service.Delete(c.Request.Context(), movieID); err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return rest.NotFound()
 		}
 		h.logger.Error(method, zap.Error(err))
