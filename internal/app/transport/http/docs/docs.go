@@ -174,6 +174,17 @@ const docTemplate = `{
                     "movies"
                 ],
                 "summary": "Create A Single Movie",
+                "parameters": [
+                    {
+                        "description": "entity",
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateUser"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -218,6 +218,13 @@ paths:
       consumes:
       - application/json
       description: Create A Single Movie
+      parameters:
+      - description: entity
+        in: body
+        name: entity
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUser'
       produces:
       - application/json
       responses:
