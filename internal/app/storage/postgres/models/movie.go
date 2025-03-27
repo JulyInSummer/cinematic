@@ -1,11 +1,7 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Movie struct {
-	gorm.Model
+	ID       uint64
 	Title    *string
 	Director *string
 	Year     *string

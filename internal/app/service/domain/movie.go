@@ -2,11 +2,10 @@ package domain
 
 import (
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/models"
-	"gorm.io/gorm"
 )
 
 type Movie struct {
-	ID       uint
+	ID       uint64
 	Title    *string
 	Director *string
 	Year     *string
@@ -15,7 +14,7 @@ type Movie struct {
 
 func (m *Movie) ToModel() models.Movie {
 	return models.Movie{
-		Model:    gorm.Model{ID: m.ID},
+		ID:       m.ID,
 		Title:    m.Title,
 		Director: m.Director,
 		Year:     m.Year,
