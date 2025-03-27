@@ -17,7 +17,7 @@ cd cinematic
 
 App run inside Docker, so make sure you have Docker & docker-compose installed on your system
 
-> **Warning:** App run inside Docker, so make sure you have Docker & docker-compose installed on your system.
+> **Warning:** App runs inside Docker, so make sure you have Docker & docker-compose installed on your system.
 
 I'm using migrate for managing migrations in the project. Make sure to install migrate binary. On how to install migrate see the following [link](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate).
 You'll also need to install [swaggo](https://github.com/swaggo/swag) if you want to play around, add more handlers to generate OpenAPI specification.
