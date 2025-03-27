@@ -99,7 +99,7 @@ func (c *cinematic) GetAll(ctx context.Context) ([]domain.Movie, error) {
 	return movies, nil
 }
 
-func (c *cinematic) GetByID(ctx context.Context, id int) (*domain.Movie, error) {
+func (c *cinematic) GetByID(ctx context.Context, id uint64) (*domain.Movie, error) {
 	result, err := c.movies.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -119,6 +119,6 @@ func (c *cinematic) Update(ctx context.Context, movie domain.Movie) error {
 
 }
 
-func (c *cinematic) Delete(ctx context.Context, id int) error {
+func (c *cinematic) Delete(ctx context.Context, id uint64) error {
 	return c.movies.Delete(ctx, id)
 }

@@ -8,9 +8,9 @@ import (
 type ServiceI interface {
 	Create(ctx context.Context, movie domain.Movie) error
 	GetAll(ctx context.Context) ([]domain.Movie, error)
-	GetByID(ctx context.Context, id int) (*domain.Movie, error)
+	GetByID(ctx context.Context, id uint64) (*domain.Movie, error)
 	Update(ctx context.Context, movie domain.Movie) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id uint64) error
 
 	UserServiceI
 }

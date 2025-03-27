@@ -8,9 +8,9 @@ import (
 type MoviesI interface {
 	Create(ctx context.Context, movie models.Movie) error
 	GetAll(ctx context.Context) ([]models.Movie, error)
-	GetByID(ctx context.Context, id int) (*models.Movie, error)
+	GetByID(ctx context.Context, id uint64) (*models.Movie, error)
 	Update(ctx context.Context, movie models.Movie) error
-	Delete(ctx context.Context, id int) error
+	Delete(ctx context.Context, id uint64) error
 }
 
 type UsersI interface {

@@ -5,11 +5,11 @@ import (
 	"strconv"
 )
 
-func ParseIntParam(c *gin.Context, param string) (int, error) {
+func ParseIntParam(c *gin.Context, param string) (uint64, error) {
 	p, err := strconv.Atoi(c.Param(param))
 	if err != nil {
 		return 0, err
 	}
 
-	return p, nil
+	return uint64(p), nil
 }
