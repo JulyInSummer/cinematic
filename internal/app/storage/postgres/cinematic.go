@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"github.com/JulyInSummer/cinematic/internal/app/storage"
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/models"
-	_ "github.com/lib/pq"
+	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/query"
+	"github.com/jackc/pgx/v5"
+	//_ "github.com/lib/pq"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
 
 type Storage struct {
-	Logger *zap.Logger
-	DB     *gorm.DB
-	Config *Config
+	logger *zap.Logger
+	db     *pgx.Conn
+	config *Config
 }
 
 func getConnString(conf *Config) string {
@@ -29,22 +30,22 @@ func getConnString(conf *Config) string {
 	return connStr
 }
 
-func NewStorage(logger *zap.Logger, db *gorm.DB, conf *Config) (storage.MoviesI, error) {
+func NewStorage(logger *zap.Logger, db *pgx.Conn, conf *Config) (storage.MoviesI, error) {
 
 	return &Storage{
-		Logger: logger,
-		DB:     db,
-		Config: conf,
+		logger: logger,
+		db:     db,
+		config: conf,
 	}, nil
 }
 
 func (s *Storage) Create(ctx context.Context, movie models.Movie) error {
 	method := "Storage.Create"
 
-	result := s.DB.WithContext(ctx).Create(&movie)
-	if result.Error != nil {
-		s.Logger.Error(method, zap.Error(result.Error))
-		return result.Error
+	_, err := s.db.Exec(ctx, query.CreateMovie, movie.Title, movie.Director, movie.Year, movie.Plot)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return err
 	}
 
 	return nil
@@ -54,23 +55,45 @@ func (s *Storage) GetAll(ctx context.Context) ([]models.Movie, error) {
 	method := "Storage.GetAll"
 
 	var movies []models.Movie
-	result := s.DB.WithContext(ctx).Find(&movies)
-	if result.Error != nil {
-		s.Logger.Error(method, zap.Error(result.Error))
-		return nil, result.Error
+	rows, err := s.db.Query(ctx, query.GetAllMovies)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var movie models.Movie
+		if err = rows.Scan(
+			&movie.ID,
+			&movie.Title,
+			&movie.Director,
+			&movie.Year,
+			&movie.Plot,
+		); err != nil {
+			s.logger.Error(method, zap.Error(err))
+			return nil, err
+		}
+
+		movies = append(movies, movie)
 	}
 
 	return movies, nil
 }
 
-func (s *Storage) GetByID(ctx context.Context, id int) (*models.Movie, error) {
+func (s *Storage) GetByID(ctx context.Context, id uint64) (*models.Movie, error) {
 	method := "Storage.GetByID"
 
 	var movie models.Movie
-	result := s.DB.WithContext(ctx).First(&movie, id)
-	if result.Error != nil {
-		s.Logger.Error(method, zap.Error(result.Error))
-		return nil, result.Error
+	if err := s.db.QueryRow(ctx, query.GetMovieByID, id).Scan(
+		&movie.ID,
+		&movie.Title,
+		&movie.Director,
+		&movie.Year,
+		&movie.Plot,
+	); err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return nil, err
 	}
 
 	return &movie, nil
@@ -79,54 +102,62 @@ func (s *Storage) GetByID(ctx context.Context, id int) (*models.Movie, error) {
 func (s *Storage) Update(ctx context.Context, movie models.Movie) error {
 	method := "Storage.Update"
 
-	resp := s.DB.WithContext(ctx).First(&models.Movie{}, movie.ID)
-	if resp.Error != nil {
-		s.Logger.Error(method, zap.Error(resp.Error))
-		return resp.Error
+	_, err := s.GetByID(ctx, movie.ID)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return err
 	}
 
-	resp = s.DB.WithContext(ctx).Model(&models.Movie{}).Where("id = ?", movie.ID).Updates(prepareMovieUpdate(movie))
+	params := pgx.NamedArgs{
+		"id":       movie.ID,
+		"title":    movie.Title,
+		"director": movie.Director,
+		"year":     movie.Year,
+		"plot":     movie.Plot,
+	}
 
-	if resp.Error != nil {
-		s.Logger.Error(method, zap.Error(resp.Error))
-		return resp.Error
+	_, err = s.db.Exec(ctx, query.UpdateMovie, params)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return err
 	}
 
 	return nil
 }
 
-func (s *Storage) Delete(ctx context.Context, id int) error {
+func (s *Storage) Delete(ctx context.Context, id uint64) error {
 	method := "Storage.Delete"
 
-	result := s.DB.WithContext(ctx).First(&models.Movie{}, id)
-	if result.Error != nil {
-		return result.Error
+	_, err := s.GetByID(ctx, id)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return err
 	}
 
-	result = s.DB.WithContext(ctx).Delete(&models.Movie{}, id)
-	if result.Error != nil {
-		s.Logger.Error(method, zap.Error(result.Error))
-		return result.Error
+	_, err = s.db.Exec(ctx, query.DeleteMovie, id)
+	if err != nil {
+		s.logger.Error(method, zap.Error(err))
+		return err
 	}
 
 	return nil
 }
 
-func prepareMovieUpdate(movie models.Movie) map[string]interface{} {
-	params := make(map[string]interface{})
-
-	if movie.Title != nil {
-		params["title"] = movie.Title
-	}
-	if movie.Year != nil {
-		params["year"] = movie.Year
-	}
-	if movie.Director != nil {
-		params["director"] = movie.Director
-	}
-	if movie.Plot != nil {
-		params["plot"] = movie.Plot
-	}
-
-	return params
-}
+//func prepareMovieUpdate(movie models.Movie) map[string]interface{} {
+//	params := make(map[string]interface{})
+//
+//	if movie.Title != nil {
+//		params["title"] = movie.Title
+//	}
+//	if movie.Year != nil {
+//		params["year"] = movie.Year
+//	}
+//	if movie.Director != nil {
+//		params["director"] = movie.Director
+//	}
+//	if movie.Plot != nil {
+//		params["plot"] = movie.Plot
+//	}
+//
+//	return params
+//}
