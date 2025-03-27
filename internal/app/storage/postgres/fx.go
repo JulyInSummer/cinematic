@@ -1,32 +1,25 @@
 package postgres
 
 import (
+	"context"
 	"fmt"
-	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/models"
+	"github.com/jackc/pgx/v5"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func NewModule() fx.Option {
 	return fx.Module(
 		"storage_postgres",
 		fx.Provide(
-			func(conf *Config) (*gorm.DB, error) {
-				db, err := gorm.Open(
-					postgres.New(postgres.Config{
-						DriverName: "postgres",
-						DSN:        getConnString(conf),
-					}),
-				)
+			func(conf *Config, ctx context.Context) (*pgx.Conn, error) {
+				db, err := pgx.Connect(ctx, getConnString(conf))
 				if err != nil {
 					return nil, fmt.Errorf("failed to connect to postgres database: %v", err)
 				}
 
-				err = db.AutoMigrate(&models.Movie{}, &models.User{})
-				if err != nil {
-					return nil, fmt.Errorf("failed to auto migrate: %w", err)
+				if err = db.Ping(ctx); err != nil {
+					return nil, fmt.Errorf("failed to ping postgres database: %v", err)
 				}
 
 				return db, nil
