@@ -8,8 +8,8 @@ http:
 service:
   secret: "V+Q4mtGLNYcC/tKIbqa05T0W06spY71ciWe/qmbEL7DybUW9ujIyQ8jkIamUKxP2wdcs4xnTRGSiDxJO"
 postgres:
-  postgres_password: "password"
-  postgres_user: "cinematic"
+  postgres_password: password
+  postgres_user: cinematic
   postgres_database: cinematic
-  postgres_host: "localhost"
+  postgres_host: localhost
   postgres_port: 5432
