@@ -3,10 +3,12 @@ package postgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/JulyInSummer/cinematic/internal/app/storage"
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/models"
 	"github.com/JulyInSummer/cinematic/internal/app/storage/postgres/query"
 	"github.com/jackc/pgx/v5"
+
 	//_ "github.com/lib/pq"
 	"go.uber.org/zap"
 )
@@ -142,22 +144,3 @@ func (s *Storage) Delete(ctx context.Context, id uint64) error {
 
 	return nil
 }
-
-//func prepareMovieUpdate(movie models.Movie) map[string]interface{} {
-//	params := make(map[string]interface{})
-//
-//	if movie.Title != nil {
-//		params["title"] = movie.Title
-//	}
-//	if movie.Year != nil {
-//		params["year"] = movie.Year
-//	}
-//	if movie.Director != nil {
-//		params["director"] = movie.Director
-//	}
-//	if movie.Plot != nil {
-//		params["plot"] = movie.Plot
-//	}
-//
-//	return params
-//}
